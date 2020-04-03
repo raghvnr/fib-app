@@ -18,10 +18,10 @@ after_success:
   - echo "$DOCKER_PWD" | docker login -u "DOCKER_ID" --password-stdin
 
   #take images and push them to docker hub
-  - docker push fib-react-prod-client
-  - docker push fib-react-prod-server
-  - docker push fib-react-prod-nginx
-  - docker push fib-react-prod-worker
+  - docker push raghvnr/fib-react-prod-client
+  - docker push raghvnr/fib-react-prod-server
+  - docker push raghvnr/fib-react-prod-nginx
+  - docker push raghvnr/fib-react-prod-worker
 
 
 #deploy:
