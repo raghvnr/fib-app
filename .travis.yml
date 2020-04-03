@@ -1,0 +1,38 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t raghvnr/fib-react -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run raghvnr/fib-react npm run test -- --coverage
+
+#this block is for building images foe each sub-project
+after_success:
+  - docker build -t raghvnr/fib-react-prod-client ./client
+  - docker build -t raghvnr/fib-react-prod-server ./server
+  - docker build -t raghvnr/fib-react-prod-nginx ./nginx
+  - docker build -t raghvnr/fib-react-prod-worker ./worker
+  #login to docker
+  - echo "$DOCKER_PWD" | docker login -u "DOCKER_ID" --password-stdin
+
+  #take images and push them to docker hub
+  - docker push fib-react-prod-client
+  - docker push fib-react-prod-server
+  - docker push fib-react-prod-nginx
+  - docker push fib-react-prod-worker
+
+
+#deploy:
+#  provider: elasticbeanstalk
+#  region: "us-east-2"
+#  app: "docker-react"
+#  env: "DockerReact-env"
+#  bucket_name: "elasticbeanstalk-us-east-2-667668532138"
+#  bucket_path: "docker-react"
+#  on:
+#    branch: master
+#  access_key_id: $AWS_ACCESS_KEY
+#  secret_access_key: $AWS_SECRET_KEY
+
